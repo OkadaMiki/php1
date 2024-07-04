@@ -6,6 +6,9 @@ require_once __DIR__ . "/utility.php";
 // 1. DB接続
 $db = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
+session_start();
+var_dump($_SESSION);
+
 try {
   // DBへの接続をチェック
   if ($db->connect_error) {
@@ -89,7 +92,7 @@ try {
           <h3 class="text-xl border-b-2 border-teal-400 pb-2 mb-5">商品の新規登録</h3>
 
           <!-- エラーメッセージ -->
-          <p class="text-red-600">エラーメッセージの表示</p>
+          <p class="text-red-600"><?= old("message") ?></p>
 
         </div>
 
@@ -103,7 +106,7 @@ try {
                 <div class="mb-5">
                   <div class="flex flex-col w-6/12">
                     <label for="product_code" class="text-gray-500 text-left uppercase tracking-wider">code</label>
-                    <input type="text" name="product_code" id="product_code" class="px-2 py-2 border rounded-md outline-none focus:border-green-200" value="">
+                    <input type="text" name="product_code" id="product_code" class="px-2 py-2 border rounded-md outline-none focus:border-green-200" value="<?= $_SESSION["request"]["product_code"] ?>">
                   </div>
                 </div>
 
@@ -113,21 +116,23 @@ try {
                     <select name="category" id="category" class="bg-white px-2 py-2 border  rounded-md outline-none focus:border-green-200">
 
                       <option value="商品カテゴリーのID">商品カテゴリーの名前</option>
-                      <?php foreach ($categories as $value) : ?>
-                        <option value="<?= $value->id ?>" <?php if ($value->id == $categoryId) : ?> selected <?php endif ?>><?= $value->name ?></option>
+                      <?php foreach ($categories as $category) : ?>
+                        <option value="<?= $category->id ?>" <?php if ($_SESSION["request"]["category"] == $category->id) : ?> selected <?php endif ?>>
+                          <?= $category->name ?>
+                        </option>
                       <?php endforeach ?>
 
                     </select>
                   </div>
                   <div class="flex flex-col w-4/12">
                     <label for="price" class="text-gray-500 text-left uppercase tracking-wider">price</label>
-                    <input type="text" name="price" id="price" class="px-2 py-2 border rounded-md outline-none focus:border-green-200" value="">
+                    <input type="text" name="price" id="price" class="px-2 py-2 border rounded-md outline-none focus:border-green-200" value="<?= $_SESSION["request"]["price"] ?>">
                   </div>
                 </div>
 
                 <div class="flex flex-col">
                   <label for="name" class="text-gray-500 text-left uppercase tracking-wider">name</label>
-                  <input type="text" name="name" id="name" class="px-2 py-2 border rounded-md outline-none focus:border-green-200" value="">
+                  <input type="text" name="name" id="name" class="px-2 py-2 border rounded-md outline-none focus:border-green-200" value="<?= $_SESSION["request"]["name"] ?>">
                 </div>
               </div>
 
