@@ -104,7 +104,7 @@ var_dump($product);
       </form>
       -->
           <!--/kadai09_1-->
-          <a href="#" class="text-white text-center leading-10 bg-pink-600 px-10 hover:bg-pink-500 rounded-md">編集する</a>
+          <a href="kadai09_1.php?product_code=<?= $product->code ?>" class="text-white text-center leading-10 bg-pink-600 px-10 hover:bg-pink-500 rounded-md">編集する</a>
         </div>
 
 

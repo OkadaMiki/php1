@@ -6,6 +6,7 @@ require_once __DIR__ . "/utility.php";
 // 1. DB接続
 $db = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
+// セッションの開始
 session_start();
 var_dump($_SESSION);
 
