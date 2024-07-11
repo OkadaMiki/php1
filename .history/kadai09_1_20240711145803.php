@@ -7,6 +7,7 @@ $message = "";
 
 $productCode = filter_input(INPUT_GET, "product_code");
 
+
 try {
   $db = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
   // DBへの接続をチェック

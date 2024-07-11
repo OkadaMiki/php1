@@ -3,12 +3,24 @@
 require_once __DIR__ . "/config.php";
 require_once __DIR__ . "/utility.php";
 
-$message = "";
+$db = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-$productCode = filter_input(INPUT_GET, "product_code");
+// セッションの開始
+session_start();
+var_dump($_SESSION);
+
+$request = [
+  "product_code" => "",
+  "name" => "",
+  "price" => 0,
+  "category" => 1,
+];
+
+if (!empty($_SESSION["request"])) {
+  $request = $_SESSION["request"];
+}
 
 try {
-  $db = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
   // DBへの接続をチェック
   if ($db->connect_error) {
     throw new Exception("DB Connect Error");
@@ -17,34 +29,44 @@ try {
   // DBとのデータの送受信で使用する文字のエンコードの指定
   $db->set_charset("utf8");
 
-  $table = TB_PRODUCT;
-  $sql = "SELECT * FROM {$table} WHERE code = ?";
-  $stmt = $db->prepare($sql);
-  $stmt->bind_param("s", $productCode);
-  $stmt->execute();
+  // 2. SQLの準備
+  // var_dump($_GET);
+  // emptyは空っぽかどうか 空っぽでtrue
+  // if (!empty($_GET["category"])) {
+  //   $categoryId = $_GET["category"];
+  // } else {
+  //   $categoryId = 0;
+  // }
+  $categoryId = filter_input(INPUT_GET, "category");
 
-  $result = $stmt->get_result();
+  $where = "";
+  if ($categoryId) {
+    $where = "WHERE category_id = {$categoryId}";
+  }
+  $sql = "SELECT * FROM php1_products {$where}";
 
-  $product = $result->fetch_object();
-  var_dump($product);
+  // SQLの実行
+  if (!$result = $db->query($sql)) {
+    throw new Exception("SQL Query Error >> {$sql}");
+  }
 
-  $stmt->close();
+  while ($row = $result->fetch_object()) {
+    $products[] = $row;
+  }
+  // var_dump($products);
 
-  $table = TB_CATEGORY;
-  $sql = "SELECT * FROM {$table}";
-  $stmt = $db->prepare($sql);
-  $stmt->execute();
-
-  $result = $stmt->get_result();
-
-  $categories = [];
+  // すべてのカテゴリーレコードを取得するSQL
+  $sql = "SELECT * FROM php1_categories";
+  // SQLの実行
+  $result = $db->query($sql);
   while ($row = $result->fetch_object()) {
     $categories[] = $row;
   }
+  // var_dump($categories);
 
   $db->close();
 } catch (Exception $error) {
-  $message = $error->getMessage();
+  print $error->getMessage();
 }
 
 ?>
@@ -80,7 +102,7 @@ try {
           <h3 class="text-xl border-b-2 border-green-400 pb-2 mb-5">登録商品の編集</h3>
 
           <!-- エラーメッセージ -->
-          <p class="text-red-600"><?= $message ?></p>
+          <p class="text-red-600">エラーメッセージを表示</p>
 
         </div>
 
@@ -95,7 +117,7 @@ try {
                 <div class="mb-5">
                   <div class="flex flex-col w-6/12">
                     <label for="product_code" class="text-gray-500 text-left uppercase tracking-wider">code</label>
-                    <p class="bg-white px-2 py-2 border rounded-md outline-none"><?= $product->code ?></p>
+                    <p class="bg-white px-2 py-2 border rounded-md outline-none"><?= $request["product_code"] ?></p>
                   </div>
                 </div>
 
@@ -104,7 +126,7 @@ try {
                     <label for="category" class="text-gray-500 text-left uppercase tracking-wider">category</label>
                     <select name="category" class="bg-white px-2 py-2 border  rounded-md outline-none focus:border-green-200">
                       <?php foreach ($categories as $category) : ?>
-                        <option value="<?= $category->id ?>" <?php if ($product->category_id == $category->id) : ?> selected <?php endif ?>>
+                        <option value="<?= $category->id ?>" <?php if ($request["category"] == $category->id) : ?> selected <?php endif ?>>
                           <?= $category->name ?>
                         </option>
                       <?php endforeach ?>
@@ -112,13 +134,13 @@ try {
                   </div>
                   <div class="flex flex-col w-4/12">
                     <label for="price" class="text-gray-500 text-left uppercase tracking-wider">price</label>
-                    <input type="text" name="price" id="price" class="px-2 py-2 border rounded-md outline-none focus:border-green-200" value="<?= $product->price ?>">
+                    <input type="text" name="price" id="price" class="px-2 py-2 border rounded-md outline-none focus:border-green-200" value="<?= $request["price"] ?>">
                   </div>
                 </div>
 
                 <div class="flex flex-col">
                   <label for="name" class="text-gray-500 text-left uppercase tracking-wider">name</label>
-                  <input type="text" name="name" id="name" class="px-2 py-2 border rounded-md outline-none focus:border-green-200" value="<?= $product->name ?>">
+                  <input type="text" name="name" id="name" class="px-2 py-2 border rounded-md outline-none focus:border-green-200" value="<?= $request["name"] ?>">
                 </div>
               </div>
 

@@ -3,49 +3,23 @@
 require_once __DIR__ . "/config.php";
 require_once __DIR__ . "/utility.php";
 
-$message = "";
+$db = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-$productCode = filter_input(INPUT_GET, "product_code");
+// セッションの開始
+session_start();
+var_dump($_SESSION);
 
-try {
-  $db = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-  // DBへの接続をチェック
-  if ($db->connect_error) {
-    throw new Exception("DB Connect Error");
-  }
+$request = [
+  "product_code" => "",
+  "name" => "",
+  "price" => 0,
+  "category" => 1,
+];
 
-  // DBとのデータの送受信で使用する文字のエンコードの指定
-  $db->set_charset("utf8");
-
-  $table = TB_PRODUCT;
-  $sql = "SELECT * FROM {$table} WHERE code = ?";
-  $stmt = $db->prepare($sql);
-  $stmt->bind_param("s", $productCode);
-  $stmt->execute();
-
-  $result = $stmt->get_result();
-
-  $product = $result->fetch_object();
-  var_dump($product);
-
-  $stmt->close();
-
-  $table = TB_CATEGORY;
-  $sql = "SELECT * FROM {$table}";
-  $stmt = $db->prepare($sql);
-  $stmt->execute();
-
-  $result = $stmt->get_result();
-
-  $categories = [];
-  while ($row = $result->fetch_object()) {
-    $categories[] = $row;
-  }
-
-  $db->close();
-} catch (Exception $error) {
-  $message = $error->getMessage();
+if (!empty($_SESSION["request"])) {
+  $request = $_SESSION["request"];
 }
+
 
 ?>
 <!DOCTYPE html>
@@ -80,7 +54,7 @@ try {
           <h3 class="text-xl border-b-2 border-green-400 pb-2 mb-5">登録商品の編集</h3>
 
           <!-- エラーメッセージ -->
-          <p class="text-red-600"><?= $message ?></p>
+          <p class="text-red-600">エラーメッセージを表示</p>
 
         </div>
 
@@ -88,14 +62,14 @@ try {
           <h4 class="font-bold mb-5">商品情報</h4>
 
           <form action="kadai09_2.php" method="POST">
-            <input type="hidden" name="product_code" value="">
+            <input type="hidden" name="product_code" value="<?= $request["product_code"] ?>">
 
             <div class="flex flex-col md:flex-row mb-10">
               <div class="flex-grow mr-0 md:mr-10 mb-5 md:mb-0">
                 <div class="mb-5">
                   <div class="flex flex-col w-6/12">
                     <label for="product_code" class="text-gray-500 text-left uppercase tracking-wider">code</label>
-                    <p class="bg-white px-2 py-2 border rounded-md outline-none"><?= $product->code ?></p>
+                    <p class="bg-white px-2 py-2 border rounded-md outline-none"></p>
                   </div>
                 </div>
 
@@ -103,22 +77,20 @@ try {
                   <div class="flex flex-col flex-grow mr-10">
                     <label for="category" class="text-gray-500 text-left uppercase tracking-wider">category</label>
                     <select name="category" class="bg-white px-2 py-2 border  rounded-md outline-none focus:border-green-200">
-                      <?php foreach ($categories as $category) : ?>
-                        <option value="<?= $category->id ?>" <?php if ($product->category_id == $category->id) : ?> selected <?php endif ?>>
-                          <?= $category->name ?>
-                        </option>
-                      <?php endforeach ?>
+
+                      <option value="" selected>商品カテゴリー名</option>
+
                     </select>
                   </div>
                   <div class="flex flex-col w-4/12">
                     <label for="price" class="text-gray-500 text-left uppercase tracking-wider">price</label>
-                    <input type="text" name="price" id="price" class="px-2 py-2 border rounded-md outline-none focus:border-green-200" value="<?= $product->price ?>">
+                    <input type="text" name="price" id="price" class="px-2 py-2 border rounded-md outline-none focus:border-green-200" value="">
                   </div>
                 </div>
 
                 <div class="flex flex-col">
                   <label for="name" class="text-gray-500 text-left uppercase tracking-wider">name</label>
-                  <input type="text" name="name" id="name" class="px-2 py-2 border rounded-md outline-none focus:border-green-200" value="<?= $product->name ?>">
+                  <input type="text" name="name" id="name" class="px-2 py-2 border rounded-md outline-none focus:border-green-200" value="">
                 </div>
               </div>
 
