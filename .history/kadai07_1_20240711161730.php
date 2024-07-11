@@ -97,10 +97,10 @@ var_dump($product);
           <!-- <a href="#" class="text-white text-center leading-10 bg-red-700 px-10 px-10 mx-5 hover:bg-red-600 rounded-md">削除する</a> -->
 
           <!--kadai10_1-->
-          <form action="kadai10_1.php" method="POST" class="w-full sm:w-fit">
+          <form action="" method="" class="w-full sm:w-fit">
             <input type="hidden" name="_method" value="DELETE">
-            <input type="hidden" name="product_code" value="<?= $product->code ?>">
-            <button type="submit" class="w-full sm:w-fit text-white text-center leading-10 bg-red-700 px-10 px-10 mx-0 sm:mx-5 my-2 sm:my-0 hover:bg-red-600 rounded-md">削除する</button>
+            <input type="hidden" name="product_no" value="">
+            <button type="submit" class=" text-white text-center leading-10 bg-red-700 px-10 px-10 mx-0 sm:mx-5 my-2 sm:my-0 hover:bg-red-600 rounded-md">削除する</button>
           </form>
 
           <!--/kadai09_1-->

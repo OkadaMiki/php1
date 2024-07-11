@@ -24,7 +24,7 @@ try {
     if ($db->connect_error) {
         throw new Exception("DB connect Error");
     }
-    $db->set_charset("utf8");
+    $db->set_charset("utf-8");
 
     // トランザクションの開始
     $db->begin_transaction();

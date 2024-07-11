@@ -94,15 +94,15 @@ var_dump($product);
 
         <div class="flex flex-col sm:flex-row justify-end mb-10">
           <a href="./kadai06_1.php" class="text-white text-center leading-10 bg-gray-600 px-10 hover:bg-gray-500 rounded-md">一覧へ戻る</a>
-          <!-- <a href="#" class="text-white text-center leading-10 bg-red-700 px-10 px-10 mx-5 hover:bg-red-600 rounded-md">削除する</a> -->
-
+          <a href="#" class="text-white text-center leading-10 bg-red-700 px-10 px-10 mx-5 hover:bg-red-600 rounded-md">削除する</a>
           <!--kadai10_1-->
-          <form action="kadai10_1.php" method="POST" class="w-full sm:w-fit">
-            <input type="hidden" name="_method" value="DELETE">
-            <input type="hidden" name="product_code" value="<?= $product->code ?>">
-            <button type="submit" class="w-full sm:w-fit text-white text-center leading-10 bg-red-700 px-10 px-10 mx-0 sm:mx-5 my-2 sm:my-0 hover:bg-red-600 rounded-md">削除する</button>
-          </form>
-
+          <!--
+        <form action="" method="" class="w-full sm:w-fit">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="product_no" value="">
+        <button type="submit" class="w-full sm:w-fit text-white text-center leading-10 bg-red-700 px-10 px-10 mx-0 sm:mx-5 my-2 sm:my-0 hover:bg-red-600 rounded-md">削除する</button>
+      </form>
+      -->
           <!--/kadai09_1-->
           <a href="kadai09_1.php?product_code=<?= $product->code ?>" class="text-white text-center leading-10 bg-pink-600 px-10 hover:bg-pink-500 rounded-md">編集する</a>
         </div>

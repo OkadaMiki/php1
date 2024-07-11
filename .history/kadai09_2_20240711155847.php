@@ -24,10 +24,7 @@ try {
     if ($db->connect_error) {
         throw new Exception("DB connect Error");
     }
-    $db->set_charset("utf8");
-
-    // トランザクションの開始
-    $db->begin_transaction();
+    $db->set_charset("utf-8");
 
     $table = TB_PRODUCT;
     // UPDATE SQL
@@ -35,10 +32,7 @@ try {
     $stmt = $db->prepare($sql);
     $stmt->bind_param("ssiis", $productCode, $name, $price, $categoryId, $productCode);
     $stmt->execute();
-
-    $db->commit();
-    redirect("kadai07_1.php?product_code={$productCode}");
 } catch (Exception $error) {
-    $db->rollback();
-    print $error->getMessage();
 }
+
+var_dump($_POST);

@@ -88,8 +88,7 @@ try {
           <h4 class="font-bold mb-5">商品情報</h4>
 
           <form action="kadai09_2.php" method="POST">
-            <input type="hidden" name="product_code" value="<?= $product->code ?>">
-            <input type="hidden" name="_method" value="PUT">
+            <input type="hidden" name="product_code" value="PUT">
 
             <div class="flex flex-col md:flex-row mb-10">
               <div class="flex-grow mr-0 md:mr-10 mb-5 md:mb-0">

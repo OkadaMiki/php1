@@ -24,7 +24,7 @@ try {
     if ($db->connect_error) {
         throw new Exception("DB connect Error");
     }
-    $db->set_charset("utf8");
+    $db->set_charset("utf-8");
 
     // トランザクションの開始
     $db->begin_transaction();
@@ -40,5 +40,6 @@ try {
     redirect("kadai07_1.php?product_code={$productCode}");
 } catch (Exception $error) {
     $db->rollback();
-    print $error->getMessage();
 }
+
+var_dump($_POST);
