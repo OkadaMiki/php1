@@ -18,7 +18,7 @@ try {
     $db->set_charset("utf8");
 
     $table = "php1_users";
-    $sql = "SELECT * FROM {$table} WHERE account = ?";
+    $sql = "SELECT * FROM {$table} WHERE BINARY account = ?";
 
     $stmt = $db->prepare($sql);
     $stmt->bind_param("s", $account);
